@@ -2,11 +2,10 @@
 	"name": "Ranklab Recorder",
 	"overrideCommand": true,
 	"postCreateCommand": "./bin/setup",
-	"workspaceFolder": "/workspaces/ranklab-recorder",
-	"build": {
-    "dockerfile": "Dockerfile",
-    "context": "."
-  },
+	"workspaceFolder": "/workspace",
+	"dockerComposeFile": "docker-compose.yml",
+	"service": "workspace",
+	"shutdownAction": "stopCompose",
 	"customizations": {
 		"vscode": {
 			"extensions": [

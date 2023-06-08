@@ -1,26 +1,45 @@
 import ui
 import pyautogui
 import os
-import subprocess
 
-def click(element):
-    ui.click_element(os.path.join('overwatch', element))
+def click(element, timeout=30):
+    ui.click_element(os.path.join('overwatch', element), timeout)
+
+def wait_for(element, timeout=30):
+    ui.wait_for_element(os.path.join('overwatch', element), timeout)
+
+def stop(kill):
+    kill("Battle.net.exe")
+    kill("Overwatch.exe")
+
+def after_start():
+    click('play.png')
 
 def before_recording(data):
-    click('play.png')
     click('career-profile.png')
     click('history.png')
     click('replays.png')
     click('import.png')
     pyautogui.typewrite(data['replay_code'])
     click('ok.png')
-
-def after_recording(kill_cmd):
-    subprocess.run(kill_cmd + ["Battle.net.exe", "\F"])
+    
+    try:
+        click('ok.png', timeout=5)
+    except Exception as e:
+        if "not found" in str(e):
+            pass
+        else:
+            raise e
+        
+    click('competitive.png')
+    click('view.png')
+    wait_for('ready-for-battle.png')
 
 overwatch = {
     'before_recording': before_recording,
-    'after_recording': after_recording,
-    'recording_ended_element': 'victory.png',
+    'after_start': after_start,
+    'stop': stop,
+    'window_title': 'Overwatch',
+    'recording_ended_element': 'replay-ended.png',
     'exe_path': "C:\\Program Files (x86)\\Overwatch\\Overwatch Launcher.exe"
 }
