@@ -4,7 +4,8 @@ from log import log
 
 
 class SSHClient:
-    def __init__(self):
+    def __init__(self, session_id):
+        self._session_id = session_id
         self.client = paramiko.SSHClient()
         self.client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
@@ -20,23 +21,26 @@ class SSHClient:
         self.client.close()
         self.client = None
 
-    def exec_command(self, cmd, wait=True, ignore_errors=False):
+    def exec_command(self, cmd, ignore_errors=False):
+        if self.client is None:
+            return
         log.info(f"Running SSH command: {cmd}")
         _, stdout, _ = self.client.exec_command(cmd)
-        if wait:
-            status = stdout.channel.recv_exit_status()
-            if status != 0 and not ignore_errors:
-                raise Exception(f"Command {cmd} failed with status {status}")
+        status = stdout.channel.recv_exit_status()
+        if status != 0 and not ignore_errors:
+            raise Exception(f"Command {cmd} failed with status {status}")
+        value = stdout.read().decode('utf-8')
+        return value
 
-    def psexec(self, cmd, wait=True, ignore_errors=False):
+    def psexec(self, cmd, ignore_errors=False):
         self.exec_command(
-            f"psexec64 -i 0 -u {config['recorder_user']} -p {config['recorder_password']} {cmd}", wait, ignore_errors)
+            f"psexec64 -i {self._session_id} -u {config['recorder_user']} -p {config['recorder_password']} {cmd}", ignore_errors)
 
-    def kill(self, cmd, wait=True, ignore_errors=True, force=True):
+    def kill(self, cmd, ignore_errors=True, force=True):
         flags = ''
         if force:
-            flags = '/F'
-        self.exec_command(f"taskkill /IM {cmd} {flags}", wait, ignore_errors)
+            flags += '/F'
+        self.exec_command(f"taskkill /IM {cmd} {flags}", ignore_errors)
 
     def copy_file(self, remote_path, local_path):
         log.info(f"Copying {remote_path} to {local_path}")

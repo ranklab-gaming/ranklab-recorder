@@ -28,7 +28,6 @@ class Overwatch(Game):
         self.click('import.png')
         pyautogui.typewrite(self.replay_code)
         self.click('ok.png')
-        time.sleep(1)
         self.try_click('ok.png')
         self.click('competitive.png')
         self.click('view.png')
