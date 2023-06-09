@@ -7,9 +7,8 @@ ui_folder = os.path.dirname(__file__)
 pyautogui.useImageNotFoundException()
 
 
-def find_element(image_path, timeout=30, enable_log=True):
-    if enable_log:
-        log.info(f"Looking for UI element {image_path}")
+def find_element(image_path, timeout=30):
+    log.info(f"Looking for UI element {image_path}")
     return pyautogui.locateOnScreen(
         os.path.join(ui_folder, image_path), timeout, confidence=0.8, grayscale=True
     )

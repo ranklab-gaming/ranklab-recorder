@@ -95,12 +95,12 @@ class Worker:
                     ui.find_element(
                         f"{game_id}/{game.recording_ended_element}",
                         timeout=0,
-                        enable_log=False,
                     )
                     log.info("Recording ended")
                     break
                 except pyautogui.ImageNotFoundException:
-                    time.sleep(1)
+                    pyautogui.screenshot("/tmp/screenshot.png")
+                    time.sleep(10)
                     pass
             log.info("Stopping recording")
             ssh_client.psexec(
