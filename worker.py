@@ -14,9 +14,6 @@ from ssh import SSHClient
 from log import log
 
 
-root_dir = os.path.dirname(os.path.abspath(__file__))
-
-
 class Worker:
     def __init__(self):
         self.sqs_client = boto3.client(
@@ -106,8 +103,12 @@ class Worker:
                     time.sleep(1)
                     pass
             log.info("Stopping recording")
-            ssh_client.psexec('cmd.exe /C start "" /min nircmd.exe win close title "ranklab-windows"')
-            ssh_client.exec_command('powershell.exe -Command Wait-Process -Name "ranklab-windows"')
+            ssh_client.psexec(
+                'cmd.exe /C start "" /min nircmd.exe win close title "ranklab-windows"'
+            )
+            ssh_client.exec_command(
+                'powershell.exe -Command Wait-Process -Name "ranklab-windows"'
+            )
             game.stop()
             ssh_client.copy_file(
                 f"C:\\Users\\{config['recorder_user']}\\Videos\\{recording_id}.mp4",
@@ -117,12 +118,12 @@ class Worker:
             s3_client.upload_video(f"/tmp/{recording_id}.mp4", video_key)
         except Exception as e:
             log.info(f"Taking screenshot of error: {e}")
-            pyautogui.screenshot(f"{root_dir}/screenshots/error.png")
+            pyautogui.screenshot("/tmp/error.png")
             raise e
         finally:
             rdp_client.close()
             ssh_client.close()
-        log.info(f"Finished recording {recording_id}!")
+        log.info(f"Finished recording with ID: {recording_id}")
 
 
 if __name__ == "__main__":

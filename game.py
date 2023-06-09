@@ -4,7 +4,9 @@ from log import log
 
 
 class Game:
-    def __init__(self, ssh_client, game_id, exe_path, window_title, recording_ended_element):
+    def __init__(
+        self, ssh_client, game_id, exe_path, window_title, recording_ended_element
+    ):
         self.ssh_client = ssh_client
         self.game_id = game_id
         self.exe_path = exe_path

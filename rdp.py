@@ -12,23 +12,27 @@ class RDPClient:
 
     def connect(self):
         log.info(f"Starting RDP session on {config['recorder_host']}")
-        self.process = subprocess.Popen([
-            "xfreerdp",
-            f"/u:{config['recorder_user']}",
-            f"/p:{config['recorder_password']}",
-            f"/v:{config['recorder_host']}",
-            "/cert-ignore",
-            "/log-level:DEBUG",
-            "/f",
-            "/w:1280",
-            "/h:720",
-            "/network:lan",
-            "/rfx",
-            "/audio-mode:1"
-        ], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        self.process = subprocess.Popen(
+            [
+                "xfreerdp",
+                f"/u:{config['recorder_user']}",
+                f"/p:{config['recorder_password']}",
+                f"/v:{config['recorder_host']}",
+                "/cert-ignore",
+                "/log-level:DEBUG",
+                "/f",
+                "/w:1280",
+                "/h:720",
+                "/network:lan",
+                "/rfx",
+                "/audio-mode:1",
+            ],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+        )
         start_time = time.time()
         while True:
-            line = self.process.stdout.readline().decode('utf-8')
+            line = self.process.stdout.readline().decode("utf-8")
             if (time.time() - start_time) > 10:
                 raise Exception("RDP connection timed out")
             if "LogonInfoV2" in line:
