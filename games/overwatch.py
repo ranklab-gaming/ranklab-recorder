@@ -1,45 +1,35 @@
-import ui
+import time
+from game import Game
 import pyautogui
-import os
+import ui
 
-def click(element, timeout=30):
-    ui.click_element(os.path.join('overwatch', element), timeout)
 
-def wait_for(element, timeout=30):
-    ui.wait_for_element(os.path.join('overwatch', element), timeout)
+class Overwatch(Game):
+    def __init__(self, ssh_client, data):
+        super().__init__(game_id="overwatch", exe_path="C:\\Program Files (x86)\\Overwatch\\Overwatch Launcher.exe",
+                         window_title="Overwatch", recording_ended_element="replay-ended.png", ssh_client=ssh_client)
+        self.replay_code = data['replay_code']
 
-def stop(kill):
-    kill("Battle.net.exe")
-    kill("Overwatch.exe")
+    def stop(self):
+        super().stop()
+        self.ssh_client.kill("Battle.net.exe")
+        self.ssh_client.kill("Overwatch.exe")
 
-def after_start():
-    click('play.png')
+    def after_start(self):
+        super().after_start()
+        self.try_click('popup-close.png')
+        self.click('play.png')
 
-def before_recording(data):
-    click('career-profile.png')
-    click('history.png')
-    click('replays.png')
-    click('import.png')
-    pyautogui.typewrite(data['replay_code'])
-    click('ok.png')
-    
-    try:
-        click('ok.png', timeout=5)
-    except Exception as e:
-        if "not found" in str(e):
-            pass
-        else:
-            raise e
-        
-    click('competitive.png')
-    click('view.png')
-    wait_for('ready-for-battle.png')
-
-overwatch = {
-    'before_recording': before_recording,
-    'after_start': after_start,
-    'stop': stop,
-    'window_title': 'Overwatch',
-    'recording_ended_element': 'replay-ended.png',
-    'exe_path': "C:\\Program Files (x86)\\Overwatch\\Overwatch Launcher.exe"
-}
+    def before_recording(self):
+        super().before_recording()
+        self.click('career-profile.png')
+        self.click('history.png')
+        self.click('replays.png')
+        self.click('import.png')
+        pyautogui.typewrite(self.replay_code)
+        self.click('ok.png')
+        time.sleep(1)
+        self.try_click('ok.png')
+        self.click('competitive.png')
+        self.click('view.png')
+        self.wait_for('ready-for-battle.png')

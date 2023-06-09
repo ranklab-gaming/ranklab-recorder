@@ -1,5 +1,5 @@
-from .overwatch import overwatch
+from .overwatch import Overwatch
 
 games = {
-    'overwatch': overwatch
+    'overwatch': Overwatch
 }
