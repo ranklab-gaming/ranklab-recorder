@@ -5,17 +5,7 @@ FROM python:3.9-slim
 WORKDIR /app
 
 # Copy the current directory contents into the container at /app
-ADD . /app
-
-# Install any needed packages specified in requirements.txt
-RUN pip install --trusted-host pypi.python.org -r requirements.txt
-
-# Configure timezone
-RUN echo "Etc/UTC" | tee /etc/timezone && \
-    ln -fs /usr/share/zoneinfo/Etc/UTC /etc/localtime && \
-    apt-get update && apt-get install -y tzdata && \
-    dpkg-reconfigure --frontend noninteractive tzdata && \
-    rm -rf /var/lib/apt/lists/*
+COPY . /app
 
 # Install host deps
 RUN apt-get update \
@@ -30,7 +20,11 @@ RUN apt-get update \
       python3-tk \
       python3-dev \
       libssl-dev \
+      build-essential \
     && rm -rf /var/lib/apt/lists/*
+
+# Install any needed packages specified in requirements.txt
+RUN pip install --trusted-host pypi.python.org -r requirements.txt
 
 # Install the AWS CLI v2
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
@@ -39,5 +33,5 @@ RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2
     && rm -rf /var/lib/apt/lists/* \
     && rm -rf awscliv2.zip aws
 
-# Run app.py when the container launches
+# Start the worker
 CMD ["./bin/start"]

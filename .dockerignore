@@ -4,4 +4,4 @@
 !/ui
 !/.env.defaults
 !/requirements.txt
-!/worker.py
+!/*.py
