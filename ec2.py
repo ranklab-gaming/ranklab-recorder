@@ -37,8 +37,10 @@ class EC2Client:
     def _check_rdp_reachable(self, ip_address, port=3389, timeout=30):
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.settimeout(timeout)
+        log.info(f"Checking if RDP port is reachable at {ip_address}:{port}")
         try:
             sock.connect((ip_address, port))
+            log.info("RDP port is reachable")
             return True
         except socket.error:
             return False
