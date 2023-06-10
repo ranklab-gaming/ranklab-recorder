@@ -26,4 +26,4 @@ class S3Client:
                 video_key,
                 ExtraArgs=args,
             )
-            log.info("Finsihed uploading file")
+            log.info("Finished uploading file")
