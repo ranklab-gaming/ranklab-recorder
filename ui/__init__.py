@@ -19,10 +19,3 @@ def click_element(image_path, timeout=30):
     pyautogui.click(pyautogui.center(element))
     log.info(f"Clicked UI element {image_path}")
     time.sleep(1)
-
-
-def try_click_element(image_path, timeout=5):
-    try:
-        click_element(image_path, timeout)
-    except pyautogui.ImageNotFoundException:
-        pass

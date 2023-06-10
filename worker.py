@@ -86,6 +86,9 @@ class Worker:
             ssh_client.psexec(
                 f'cmd.exe /C start "ranklab-windows" /min "ranklab-windows.exe" {recording_id}.mp4'
             )
+            ssh_client.psexec(
+                'cmd.exe /C start "" /min nircmd.exe win hide title "ranklab-windows"'
+            )
             start_time = time.time()
             while True:
                 timeout = config["recording_timeout"]

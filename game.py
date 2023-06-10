@@ -19,9 +19,6 @@ class Game:
     def wait_for(self, element, timeout=30):
         ui.find_element(os.path.join(self.game_id, element), timeout)
 
-    def try_click(self, element, timeout=5):
-        ui.try_click_element(os.path.join(self.game_id, element), timeout)
-
     def start(self):
         log.info(f"Executing start {self.game_id}")
 

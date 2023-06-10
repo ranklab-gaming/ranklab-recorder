@@ -23,8 +23,11 @@ class Overwatch(Game):
 
     def after_start(self):
         super().after_start()
-        self.try_click("popup-close.png")
-        self.click("play.png")
+        try:
+            self.click("play.png")
+        except pyautogui.ImageNotFoundException:
+            self.click("popup-close.png")
+            self.click("play.png")
 
     def before_recording(self):
         super().before_recording()
@@ -34,8 +37,11 @@ class Overwatch(Game):
         self.click("import.png")
         pyautogui.typewrite(self.replay_code)
         self.click("ok.png")
-        self.try_click("ok.png")
-        self.click("competitive.png")
+        try:
+            self.click("competitive.png")
+        except pyautogui.ImageNotFoundException:
+            self.click("ok.png")
+            self.click("competitive.png")
         self.click("view.png")
         self.wait_for("get-ready.png")
         pyautogui.press(f"f{self.player_position + 1}")
