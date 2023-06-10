@@ -14,14 +14,16 @@ class S3Client:
         )
         with open(file_path, "rb") as data:
             log.info(f"Uploading {file_path} to {config['s3_bucket']}/{video_key}")
+            args = {
+                "ACL": "public-read",
+                "ContentType": "video/mp4",
+            }
+            if config["instance_id"]:
+                args["Metadata"] = {"instance-id": config["instance_id"]}
             s3.upload_fileobj(
                 data,
                 config["s3_bucket"],
                 video_key,
-                ExtraArgs={
-                    "ACL": "public-read",
-                    "ContentType": "video/mp4",
-                    "Metadata": {"instance-id": config["instance_id"]},
-                },
+                ExtraArgs=args,
             )
             log.info("Finsihed uploading file")
