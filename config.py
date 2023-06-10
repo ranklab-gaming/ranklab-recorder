@@ -14,4 +14,5 @@ config = {
     "sqs_queue_url": os.getenv("SQS_QUEUE_URL"),
     "recording_duration": int(os.getenv("RECORDING_DURATION") or 0),
     "recording_timeout": int(os.getenv("RECORDING_TIMEOUT") or 60 * 60),
+    "ec2_instance_id": os.getenv("EC2_INSTANCE_ID"),
 }

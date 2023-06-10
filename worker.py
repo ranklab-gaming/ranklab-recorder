@@ -1,5 +1,4 @@
 import json
-import os
 import signal
 import sys
 import boto3
@@ -12,6 +11,7 @@ from games import games
 from config import config
 from ssh import SSHClient
 from log import log
+from ec2 import EC2Client
 
 
 class Worker:
@@ -22,6 +22,7 @@ class Worker:
             aws_access_key_id=config["aws_access_key_id"],
             aws_secret_access_key=config["aws_secret_access_key"],
         )
+        self.ec2_client = EC2Client()
 
     def poll_queue(self):
         log.info(f"Worker started. Instance ID: {config['instance_id']}")
@@ -58,6 +59,7 @@ class Worker:
         recording_id = body.get("id")
         game_id = body.get("game_id")
         video_key = body.get("video_key")
+        self.ec2_client.start_instance()
         rdp_client = RDPClient()
         rdp_client.connect()
         ssh_client = SSHClient(rdp_client.session_id)
@@ -124,6 +126,7 @@ class Worker:
         finally:
             rdp_client.close()
             ssh_client.close()
+            self.ec2_client.stop_instance()
         log.info(f"Finished recording with ID: {recording_id}")
 
 
