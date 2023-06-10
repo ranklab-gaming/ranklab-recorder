@@ -3,7 +3,14 @@ from config import config
 import subprocess
 from log import log
 import re
+import threading
 
+def flush_stdout(process):
+    while True:
+        process.stdout.readline()
+        if process.poll() is not None:
+            break
+        time.sleep(1)
 
 class RDPClient:
     def __init__(self):
@@ -39,7 +46,7 @@ class RDPClient:
                 session_id = re.search("SessionId: 0x([0-9a-fA-F]+)", line).group(1)
                 self.session_id = int(session_id, 16)
                 break
-
+        threading.Thread(target=flush_stdout, args=(self.process,)).start()
     def close(self):
         if not self.process:
             return

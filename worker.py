@@ -76,7 +76,7 @@ class Worker:
         try:
             game.stop()
             ssh_client.exec_command(
-                f"del C:\\Users\\{config['recorder_user']}\\Videos\\{recording_id}.mp4"
+                f"del C:\\Users\\{config['recorder_user']}\\Videos\\*.mp4"
             )
             ssh_client.psexec(f'cmd.exe /C start "" "{game.exe_path}"')
             game.after_start()
