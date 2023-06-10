@@ -55,14 +55,14 @@ class Worker:
                 log.error(f"Error polling queue: {e}")
 
     def _record(self, body):
-        recording_id = body.get("recording_id")
+        recording_id = body.get("id")
         game_id = body.get("game_id")
         video_key = body.get("video_key")
         rdp_client = RDPClient()
         rdp_client.connect()
         ssh_client = SSHClient(rdp_client.session_id)
         ssh_client.connect()
-        game = games[body.get("game_id")](ssh_client=ssh_client, data=body)
+        game = games[body.get("game_id")](ssh_client=ssh_client, data=body["metadata"])
         signal.signal(
             signal.SIGINT,
             lambda _, __: (
