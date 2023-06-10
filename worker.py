@@ -86,11 +86,13 @@ class Worker:
             )
             start_time = time.time()
             while True:
-                if time.time() > start_time + config["recording_timeout"]:
-                    log.info(
-                        f"Recording timed out after {config['recording_timeout']}s"
-                    )
+                timeout = config["recording_timeout"]
+                duration = config["recording_duration"]
+                if duration and time.time() > start_time + duration:
+                    log.info("Recording duration reached, stopping here")
                     break
+                if time.time() > start_time + timeout:
+                    raise Exception("Recording timed out")
                 try:
                     ui.find_element(
                         f"{game_id}/{game.recording_ended_element}",
@@ -99,7 +101,6 @@ class Worker:
                     log.info("Recording ended")
                     break
                 except pyautogui.ImageNotFoundException:
-                    pyautogui.screenshot("/tmp/screenshot.png")
                     time.sleep(10)
                     pass
             log.info("Stopping recording")

@@ -5,12 +5,14 @@ from log import log
 import re
 import threading
 
+
 def flush_stdout(process):
     while True:
         process.stdout.readline()
         if process.poll() is not None:
             break
         time.sleep(1)
+
 
 class RDPClient:
     def __init__(self):
@@ -47,6 +49,7 @@ class RDPClient:
                 self.session_id = int(session_id, 16)
                 break
         threading.Thread(target=flush_stdout, args=(self.process,)).start()
+
     def close(self):
         if not self.process:
             return
