@@ -41,7 +41,6 @@ class EC2Client:
         log.info(f"Checking if RDP port is reachable at {ip_address}:{port}")
         try:
             sock.connect((ip_address, port))
-            time.sleep(5)
             log.info("RDP port is reachable")
             return True
         except socket.error:
