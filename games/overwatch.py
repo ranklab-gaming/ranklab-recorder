@@ -14,7 +14,7 @@ class Overwatch(Game):
             ssh_client=ssh_client,
         )
         self.replay_code = data["replay_code"]
-        self.player_position = data["player_position"]
+        self.player_position = int(data["player_position"])
 
     def stop(self):
         super().stop()
