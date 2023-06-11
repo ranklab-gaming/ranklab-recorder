@@ -1,5 +1,4 @@
 import socket
-import time
 import boto3
 from config import config
 from log import log

@@ -1,7 +1,6 @@
 import time
 from game import Game
 import pyautogui
-import ui
 
 
 class Overwatch(Game):
@@ -39,4 +38,5 @@ class Overwatch(Game):
         self.click("ok.png")
         self.click("view.png")
         self.find("team-1.png")
+        time.sleep(1)
         pyautogui.press(f"f{self.player_position + 1}")
