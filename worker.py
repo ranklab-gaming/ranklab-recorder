@@ -78,13 +78,13 @@ class Worker:
         try:
             game.stop()
             ssh_client.exec_command(
-                f"del C:\\Users\\{config['recorder_user']}\\Videos\\*.mp4"
+                f"del C:\\Users\\{config['recorder_user']}\\Videos\\recording.mp4"
             )
             ssh_client.psexec(f'cmd.exe /C start "" "{game.exe_path}"')
             game.after_start()
             game.before_recording()
             ssh_client.psexec(
-                f'cmd.exe /C start "ranklab-windows" /min "ranklab-windows.exe" {recording_id}.mp4'
+                'cmd.exe /C start "ranklab-windows" /min "ranklab-windows.exe" recording.mp4'
             )
             ssh_client.psexec(
                 'cmd.exe /C start "" /min nircmd.exe win hide title "ranklab-windows"'
@@ -117,11 +117,11 @@ class Worker:
             )
             game.stop()
             ssh_client.copy_file(
-                f"C:\\Users\\{config['recorder_user']}\\Videos\\{recording_id}.mp4",
-                f"/tmp/{recording_id}.mp4",
+                f"C:\\Users\\{config['recorder_user']}\\Videos\\recording.mp4",
+                "/tmp/recording.mp4",
             )
             s3_client = S3Client()
-            s3_client.upload_video(f"/tmp/{recording_id}.mp4", video_key)
+            s3_client.upload_video(f"/tmp/recording.mp4", video_key)
         except Exception as e:
             log.info(f"Taking screenshot of error: {e}")
             pyautogui.screenshot("/tmp/error.png")
