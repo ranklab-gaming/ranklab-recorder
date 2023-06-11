@@ -42,12 +42,13 @@ class RDPClient:
         start_time = time.time()
         while True:
             line = self.process.stdout.readline().decode("utf-8")
-            if (time.time() - start_time) > 30:
+            if (time.time() - start_time) > 120:
                 raise Exception("RDP connection timed out")
             if "LogonInfoV2" in line:
                 session_id = re.search("SessionId: 0x([0-9a-fA-F]+)", line).group(1)
                 self.session_id = int(session_id, 16)
                 break
+            time.sleep(0.1)
         threading.Thread(target=flush_stdout, args=(self.process,)).start()
 
     def close(self):
