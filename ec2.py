@@ -7,32 +7,39 @@ from log import log
 
 class EC2Client:
     def __init__(self):
-        self.client = boto3.resource(
+        self.client = boto3.client(
             "ec2",
             region_name="eu-west-2",
             aws_access_key_id=config["aws_access_key_id"],
             aws_secret_access_key=config["aws_secret_access_key"],
         )
-        if not config["ec2_instance_id"]:
-            return
-        self.instance = self.client.Instance(config["ec2_instance_id"])
+        self.instance_id = config["ec2_instance_id"]
 
     def start_instance(self):
-        if not config["ec2_instance_id"]:
+        if not self.instance_id:
             return
-        log.info(f"Starting EC2 instance {config['ec2_instance_id']}")
-        self.instance.start()
-        self.instance.wait_until_running()
-        if not self._check_rdp_reachable(self.instance.private_ip_address):
+        log.info(f"Starting EC2 instance {self.instance_id}")
+        self.client.start_instances(InstanceIds=[self.instance_id])
+        self.client.get_waiter("instance_running").wait(InstanceIds=[self.instance_id])
+        self.client.get_waiter("instance_status_ok").wait(
+            InstanceIds=[self.instance_id]
+        )
+        instance_description = self.client.describe_instances(
+            InstanceIds=[self.instance_id]
+        )
+        private_ip = instance_description["Reservations"][0]["Instances"][0][
+            "PrivateIpAddress"
+        ]
+        if not self._check_rdp_reachable(private_ip):
             raise Exception("RDP service is not reachable")
         log.info("Started EC2 instance")
 
     def stop_instance(self):
-        if not config["ec2_instance_id"]:
+        if not self.instance_id:
             return
         log.info("Stopping EC2 instance")
-        self.instance.stop()
-        self.instance.wait_until_stopped()
+        self.client.stop_instances(InstanceIds=[self.instance_id])
+        self.client.get_waiter("instance_stopped").wait(InstanceIds=[self.instance_id])
         log.info("Stopped EC2 instance")
 
     def _check_rdp_reachable(self, ip_address, port=3389, timeout=30):
