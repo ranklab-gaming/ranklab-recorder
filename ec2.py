@@ -22,7 +22,7 @@ class EC2Client:
         log.info(f"Starting EC2 instance {config['ec2_instance_id']}")
         self.instance.start()
         self.instance.wait_until_running()
-        if not self._check_rdp_reachable(self.instance.public_ip_address):
+        if not self._check_rdp_reachable(self.instance.private_ip_address):
             raise Exception("RDP service is not reachable")
         log.info("Started EC2 instance")
 
