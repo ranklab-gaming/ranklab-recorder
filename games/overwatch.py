@@ -38,5 +38,5 @@ class Overwatch(Game):
         pyautogui.typewrite(self.replay_code)
         self.click("ok.png")
         self.click("view.png")
-        self.wait_for("team-1.png")
+        self.find("team-1.png")
         pyautogui.press(f"f{self.player_position + 1}")
