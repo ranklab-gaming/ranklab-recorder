@@ -13,10 +13,10 @@ class Game:
         self.window_title = window_title
         self.recording_ended_element = recording_ended_element
 
-    def click(self, element, timeout=30):
+    def click(self, element, timeout=20):
         ui.click_element(os.path.join(self.game_id, element), timeout)
 
-    def wait_for(self, element, timeout=30):
+    def wait_for(self, element, timeout=20):
         ui.find_element(os.path.join(self.game_id, element), timeout)
 
     def start(self):

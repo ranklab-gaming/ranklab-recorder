@@ -38,10 +38,10 @@ class Overwatch(Game):
         pyautogui.typewrite(self.replay_code)
         self.click("ok.png")
         try:
-            self.click("competitive.png")
+            self.click("done.png")
         except pyautogui.ImageNotFoundException:
             self.click("ok.png")
-            self.click("competitive.png")
+        self.click("competitive.png")
         self.click("view.png")
-        self.wait_for("get-ready.png")
+        self.wait_for("team-1.png")
         pyautogui.press(f"f{self.player_position + 1}")
