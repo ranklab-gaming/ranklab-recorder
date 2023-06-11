@@ -21,9 +21,6 @@ class EC2Client:
         log.info(f"Starting EC2 instance {self.instance_id}")
         self.client.start_instances(InstanceIds=[self.instance_id])
         self.client.get_waiter("instance_running").wait(InstanceIds=[self.instance_id])
-        self.client.get_waiter("instance_status_ok").wait(
-            InstanceIds=[self.instance_id]
-        )
         instance_description = self.client.describe_instances(
             InstanceIds=[self.instance_id]
         )
