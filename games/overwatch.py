@@ -25,8 +25,12 @@ class Overwatch(Game):
         try:
             self.click("play.png")
         except pyautogui.ImageNotFoundException:
-            self.click("popup-close.png")
-            self.click("play.png")
+            try:
+                self.click("popup-close.png")
+                self.click("play.png")
+            except pyautogui.ImageNotFoundException:
+                self.click("update.png")
+                self.click("play.png", timeout=600)
 
     def before_recording(self):
         super().before_recording()
@@ -38,5 +42,5 @@ class Overwatch(Game):
         self.click("ok.png")
         self.click("view.png")
         self.find("team-1.png")
-        time.sleep(1)
+        time.sleep(3)
         pyautogui.press(f"f{self.player_position + 1}")

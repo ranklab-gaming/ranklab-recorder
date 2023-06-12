@@ -59,6 +59,7 @@ class Worker:
         recording_id = body.get("id")
         game_id = body.get("game_id")
         video_key = body.get("video_key")
+        log.info(f"Starting recording {recording_id}")
         self.ec2_client.start_instance()
         rdp_client = RDPClient()
         rdp_client.connect()
@@ -130,7 +131,7 @@ class Worker:
             rdp_client.close()
             ssh_client.close()
             self.ec2_client.stop_instance()
-        log.info(f"Finished recording with ID: {recording_id}")
+        log.info(f"Finished recording")
 
 
 if __name__ == "__main__":
