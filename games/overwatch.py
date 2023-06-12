@@ -12,8 +12,8 @@ class Overwatch(Game):
             recording_ended_element="replay-ended.png",
             ssh_client=ssh_client,
         )
-        self.replay_code = data["replay_code"]
-        self.player_position = int(data["player_position"])
+        self.replay_code = data["overwatch"]["replay_code"]
+        self.player_position = int(data["overwatch"]["player_position"])
 
     def stop(self):
         super().stop()
