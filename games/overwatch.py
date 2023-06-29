@@ -42,5 +42,8 @@ class Overwatch(Game):
         self.click("ok.png")
         self.click("view.png")
         self.find("team-1.png")
-        time.sleep(3)
-        pyautogui.press(f"f{self.player_position + 1}")
+        time.sleep(1)
+        fn_key = self.player_position + 1
+        if fn_key > 5:
+            fn_key += 1
+        pyautogui.press(f"f{fn_key}")
