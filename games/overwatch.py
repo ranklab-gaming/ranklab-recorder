@@ -42,7 +42,7 @@ class Overwatch(Game):
         self.click("ok.png")
         self.click("view.png")
         self.find("team-1.png")
-        time.sleep(1)
+        time.sleep(3)
         fn_key = self.player_position + 1
         if fn_key > 5:
             fn_key += 1
