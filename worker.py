@@ -65,18 +65,7 @@ class Worker:
         rdp_client.connect()
         ssh_client = SSHClient(rdp_client.session_id)
         ssh_client.connect()
-        ssh_client.exec_command(
-            """
-            powershell.exe -Command "& {
-                $Disk = Get-Disk | Where partitionstyle -eq 'raw' | Select -First 1
-                if ($null -ne $Disk) {
-                    Initialize-Disk -Number $Disk.Number -PartitionStyle MBR -PassThru |
-                    New-Partition -DriveLetter D -UseMaximumSize |
-                    Format-Volume -FileSystem NTFS -NewFileSystemLabel 'InstanceStore' -Confirm:$false
-                }
-            }"
-        """
-        )
+        ssh_client.exec_command("powershell.exe C:\\format.ps1")
         game = games[body.get("game_id")](ssh_client=ssh_client, data=body["metadata"])
         signal.signal(
             signal.SIGINT,
