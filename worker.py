@@ -79,7 +79,7 @@ class Worker:
         try:
             game.stop()
             ssh_client.exec_command(
-                f"del C:\\Users\\{config['recorder_user']}\\Videos\\recording.mp4"
+                f"del D:\\recording.mp4"
             )
             ssh_client.psexec(f'cmd.exe /C start "" "{game.exe_path}"')
             game.after_start()
@@ -118,7 +118,7 @@ class Worker:
             )
             game.stop()
             ssh_client.copy_file(
-                f"C:\\Users\\{config['recorder_user']}\\Videos\\recording.mp4",
+                f"D:\\recording.mp4",
                 "/tmp/recording.mp4",
             )
             s3_client = S3Client()
