@@ -47,3 +47,7 @@ class Overwatch(Game):
         if fn_key > 5:
             fn_key += 1
         pyautogui.press(f"f{fn_key}")
+        time.sleep(1)
+        pyautogui.press(f"f{fn_key}")
+        time.sleep(1)
+        pyautogui.press(f"f{fn_key}")
