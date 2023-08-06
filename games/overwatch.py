@@ -42,12 +42,16 @@ class Overwatch(Game):
         self.click("ok.png")
         self.click("view.png")
         self.find("team-1.png")
-        time.sleep(3)
         fn_key = self.player_position + 1
         if fn_key > 5:
             fn_key += 1
-        pyautogui.press(f"f{fn_key}")
-        time.sleep(1)
-        pyautogui.press(f"f{fn_key}")
-        time.sleep(1)
-        pyautogui.press(f"f{fn_key}")
+        start_time = time.time()
+        while True:
+            if time.time() > start_time + 120:
+                raise Exception("Could not find player indicator")
+            pyautogui.press(f"f{fn_key}")
+            try:
+                self.find("player-indicator.png", timeout=5)
+                break
+            except pyautogui.ImageNotFoundException:
+                time.sleep(1)
