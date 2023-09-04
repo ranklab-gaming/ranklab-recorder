@@ -1,7 +1,0 @@
-**
-!/bin/start
-!/games
-!/ui
-!/.env.defaults
-!/requirements.txt
-!/*.py
